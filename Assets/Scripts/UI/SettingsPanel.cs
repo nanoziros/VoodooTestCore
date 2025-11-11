@@ -46,6 +46,11 @@ public class SettingsPanel : MonoBehaviour
             m_Haptic.Vibrate(MobileHapticManager.E_FeedBackType.ImpactHeavy);
     }
 
+    public void ClickDebugButton()
+    {
+        // todo:
+    }
+
     public void ClickSettingsButton()
     {
         m_PanelVisible = !m_PanelVisible;
