@@ -20,7 +20,8 @@ namespace Services
         LOADING,
         GAME,
         PRE_END,
-        END
+        END,
+        DEBUG
     }
 
     public class GameService : IGameService

@@ -60,14 +60,23 @@ namespace UI
                     break;
 
                 case GamePhase.LOADING:
-                    m_BrushGroundLight.SetActive(false);
-
-                    m_BrushesPrefab.SetActive(false);
+                    ManageBrushDisplay(false);
 
                     if (m_Visible)
                         Transition(false);
                     break;
+                
+                case GamePhase.DEBUG:
+                    ManageBrushDisplay(false);
+
+                    Transition(false);
+                    break;
             }
+        }
+        void ManageBrushDisplay(bool state)
+        {
+            m_BrushGroundLight.SetActive(state);
+            m_BrushesPrefab.SetActive(state);
         }
 
         public void SetTitleColor(Color _Color)

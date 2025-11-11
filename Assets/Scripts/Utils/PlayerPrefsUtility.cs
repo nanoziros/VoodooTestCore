@@ -4,6 +4,10 @@ namespace Utils
 {
     public static class PlayerPrefsUtility
     {
+        public static void DeleteAll()
+        {
+            PlayerPrefs.DeleteAll();
+        }
         public static bool GetBool(string key, bool defaultValue)
         {
             return PlayerPrefs.GetInt(key, defaultValue ? 1 : 0) == 1;

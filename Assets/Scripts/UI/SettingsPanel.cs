@@ -1,6 +1,9 @@
 ﻿using Gameplay;
+using Interfaces.Services;
+using Services;
 using UnityEngine;
 using UnityEngine.UI;
+using Zenject;
 
 namespace UI
 {
@@ -17,6 +20,8 @@ namespace UI
         // Buffer
         private bool m_PanelVisible;
 
+        private IGameService m_GameService;
+
         private bool Vibration
         {
             get
@@ -28,6 +33,12 @@ namespace UI
                 MobileHapticManager.s_Vibrate = value;
                 PlayerPrefs.SetInt(Constants.c_VibrationSave, value ? 1 : 0); // Converting bool to int
             }
+        }
+        
+        [Inject]
+        public void Construct(IGameService gameService)
+        {
+            m_GameService = gameService;
         }
 
         private void Awake()
@@ -51,7 +62,8 @@ namespace UI
 
         public void ClickDebugButton()
         {
-            // todo:
+            if (m_GameService.currentPhase == GamePhase.MAIN_MENU)
+                m_GameService.ChangePhase(GamePhase.DEBUG);
         }
 
         public void ClickSettingsButton()
