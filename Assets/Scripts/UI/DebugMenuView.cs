@@ -48,7 +48,7 @@ namespace UI
         
         public void OnClickContinueButton()
         {
-            SceneManager.LoadScene("Game");
+            SceneLoaderUtility.LoadMainMenu();
         }
 
         protected override void OnGamePhaseChanged(GamePhase _GamePhase)

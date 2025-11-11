@@ -7,6 +7,7 @@ using Services;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Utils;
 using Zenject;
 
 namespace UI
@@ -81,7 +82,7 @@ namespace UI
             if (m_GameService.currentPhase == GamePhase.END)
             {
                 m_SceneEventsService.TriggerOnClean();
-                SceneManager.LoadScene("Game");
+                SceneLoaderUtility.LoadMainMenu();
             }
         }
 
