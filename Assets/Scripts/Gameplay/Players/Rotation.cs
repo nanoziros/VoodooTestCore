@@ -1,20 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Rotation : MonoBehaviour
+namespace Gameplay.Players
 {
-	// Cache
-	private Transform	m_Transform;
-
-	void Awake ()
+	public class Rotation : MonoBehaviour
 	{
 		// Cache
-		m_Transform = transform;
-	}
+		private Transform	m_Transform;
 
-	void Update ()
-	{
-		m_Transform.RotateAround (m_Transform.position, Vector3.up, 50.0f * Time.deltaTime);
+		void Awake ()
+		{
+			// Cache
+			m_Transform = transform;
+		}
+
+		void Update ()
+		{
+			m_Transform.RotateAround (m_Transform.position, Vector3.up, 50.0f * Time.deltaTime);
+		}
 	}
 }

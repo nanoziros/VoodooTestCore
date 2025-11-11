@@ -1,16 +1,19 @@
-using System.Collections;
 using System.Collections.Generic;
+using Gameplay.PowerUps;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "GameConfig", menuName = "Config/GameConfig")]
-public class GameConfig : ScriptableObject
+namespace Configs
 {
-    public int m_DebugLevel = 1;
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "Config/GameConfig")]
+    public class GameConfig : ScriptableObject
+    {
+        public int m_DebugLevel = 1;
 
-    public PowerUp m_BrushPowerUpPrefab;
-    public GameObject m_HumanPlayer;
-    public GameObject m_IAPlayer;
-    public Transform m_HumanSpotlight;
+        public PowerUp m_BrushPowerUpPrefab;
+        public GameObject m_HumanPlayer;
+        public GameObject m_IAPlayer;
+        public Transform m_HumanSpotlight;
 
-    public List<int> m_XPByRank;
+        public List<int> m_XPByRank;
+    }
 }

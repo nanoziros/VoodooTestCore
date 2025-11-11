@@ -1,35 +1,35 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class LoadingManager : MonoBehaviour
+namespace UI
 {
-    public Image loadingFill;
-    public string sceneToLoad = "Game";
-    public float duration = 2f;
-
-    private void Start()
+    public class LoadingManager : MonoBehaviour
     {
-        StartCoroutine(ProgressAndLoad());
-    }
+        public Image loadingFill;
+        public string sceneToLoad = "Game";
+        public float duration = 2f;
 
-    private IEnumerator ProgressAndLoad()
-    {
-        float elapsed = 0f;
-
-        // Progression du fillAmount sur 2 secondes
-        while (elapsed < duration)
+        private void Start()
         {
-            elapsed += Time.deltaTime;
-            loadingFill.fillAmount = Mathf.Clamp01(elapsed / duration);
-            yield return null;
+            StartCoroutine(ProgressAndLoad());
         }
 
-        // Lancer le chargement de la scène en mode additive
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Single);
+        private IEnumerator ProgressAndLoad()
+        {
+            float elapsed = 0f;
+
+            // Progression du fillAmount sur 2 secondes
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                loadingFill.fillAmount = Mathf.Clamp01(elapsed / duration);
+                yield return null;
+            }
+
+            // Lancer le chargement de la scène en mode additive
+            AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneToLoad, LoadSceneMode.Single);
+        }
     }
 }

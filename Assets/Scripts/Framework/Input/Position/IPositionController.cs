@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface IPositionController
+namespace Framework.Input.Position
 {
-	void OnStartMove (Vector3 _Pos);
-	void OnMove (Vector3 _Offset);
-	void OnEndMove (Vector3 _Pos);
+	public interface IPositionController
+	{
+		void OnStartMove (Vector3 _Pos);
+		void OnMove (Vector3 _Offset);
+		void OnEndMove (Vector3 _Pos);
+	}
 }

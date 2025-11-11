@@ -1,9 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Gameplay.Terrain;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "Terrain", menuName = "Data/Terrain", order = 1)]
-public class TerrainData : ScriptableObject
+namespace Gameplay.Data
 {
-	public TerrainController m_Prefab;
+	[CreateAssetMenu(fileName = "Terrain", menuName = "Data/Terrain", order = 1)]
+	public class TerrainData : ScriptableObject
+	{
+		public TerrainController m_Prefab;
+	}
 }

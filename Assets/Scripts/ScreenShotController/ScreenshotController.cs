@@ -1,10 +1,9 @@
 ﻿#if UNITY_EDITOR
+using System.Collections;
 using System.IO;
 using UnityEngine;
-using System.Collections;
-using UnityEditor;
 
-namespace EmptyGame.Misc {
+namespace ScreenShotController {
 
 	public class ScreenshotController : MonoBehaviour {
 		public string ScreenshotFolder = "Screenshots";

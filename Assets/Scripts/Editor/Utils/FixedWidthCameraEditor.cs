@@ -1,4 +1,5 @@
 ﻿using UnityEditor;
+using Utils;
 
 [CustomEditor(typeof(FixedWidthCamera))]
 public class FixedWidthCameraEditor : Editor

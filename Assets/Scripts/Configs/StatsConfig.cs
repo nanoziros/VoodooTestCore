@@ -1,9 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "StatsConfig", menuName = "Config/StatsConfig")]
-public class StatsConfig : ScriptableObject
+namespace Configs
 {
-    public List<int>    m_XPForLevel;
+    [CreateAssetMenu(fileName = "StatsConfig", menuName = "Config/StatsConfig")]
+    public class StatsConfig : ScriptableObject
+    {
+        public List<int>    m_XPForLevel;
+    }
 }

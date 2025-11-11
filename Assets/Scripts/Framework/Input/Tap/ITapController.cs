@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface ITapController
+namespace Framework.Input.Tap
 {
-	void OnTap (Vector3 _Pos);
+	public interface ITapController
+	{
+		void OnTap (Vector3 _Pos);
+	}
 }

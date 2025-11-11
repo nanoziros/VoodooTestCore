@@ -1,8 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface IDrawLine
+namespace Framework.Draw
 {
-    void AddPoint(Vector3 _Pos, bool _IsSubBrush = false);
+    public interface IDrawLine
+    {
+        void AddPoint(Vector3 _Pos, bool _IsSubBrush = false);
+    }
 }

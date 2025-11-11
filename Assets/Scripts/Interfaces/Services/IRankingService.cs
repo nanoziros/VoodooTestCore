@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public interface IRankingService
+namespace Interfaces.Services
 {
+    public interface IRankingService
+    {
+    }
 }

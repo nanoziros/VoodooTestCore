@@ -1,11 +1,16 @@
-﻿public sealed class PowerUp_SizeUp : PowerUp
+﻿using Gameplay.Players;
+
+namespace Gameplay.PowerUps
 {
-	public float 	m_Factor = 1.5f;
-
-	public override void OnPlayerTouched (Player _Player)
+	public sealed class PowerUp_SizeUp : PowerUp
 	{
-		base.OnPlayerTouched (_Player);
+		public float 	m_Factor = 1.5f;
 
-		_Player.AddSizeUp (m_Factor, m_Duration);
+		public override void OnPlayerTouched (Player _Player)
+		{
+			base.OnPlayerTouched (_Player);
+
+			_Player.AddSizeUp (m_Factor, m_Duration);
+		}
 	}
 }

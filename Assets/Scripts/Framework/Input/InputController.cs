@@ -1,32 +1,33 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class InputController : MonoBehaviour
+namespace Framework.Input
 {
-	public enum PositionType
+	public abstract class InputController : MonoBehaviour
 	{
-		SCREEN,
-		SCREEN_PERCENT,
-		WORLD
-	}
+		public enum PositionType
+		{
+			SCREEN,
+			SCREEN_PERCENT,
+			WORLD
+		}
 
-	public PositionType 	m_PosType;
+		public PositionType 	m_PosType;
 
-	// Cache
-	protected Transform		m_Transform;
-	protected Camera		m_Camera;
-	protected Transform 	m_CameraTr;
+		// Cache
+		protected Transform		m_Transform;
+		protected Camera		m_Camera;
+		protected Transform 	m_CameraTr;
 
-	protected virtual void Awake()
-	{
-		m_Transform = transform;
-		m_Camera = Camera.main;
-		m_CameraTr = m_Camera.transform;
-	}
+		protected virtual void Awake()
+		{
+			m_Transform = transform;
+			m_Camera = Camera.main;
+			m_CameraTr = m_Camera.transform;
+		}
 
-	protected float GetDepth()
-	{
-		return Vector3.Project (m_Transform.position - m_CameraTr.position, m_CameraTr.forward).magnitude;
+		protected float GetDepth()
+		{
+			return Vector3.Project (m_Transform.position - m_CameraTr.position, m_CameraTr.forward).magnitude;
+		}
 	}
 }

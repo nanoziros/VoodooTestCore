@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Preload : MonoBehaviour
+namespace Utils
 {
-	private void Awake()
+	public class Preload : MonoBehaviour
 	{
-		if (SceneManager.sceneCount == 1)
-			SceneManager.LoadScene(1);
+		private void Awake()
+		{
+			if (SceneManager.sceneCount == 1)
+				SceneManager.LoadScene(1);
+		}
 	}
 }

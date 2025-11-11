@@ -1,51 +1,54 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using Gameplay.Players;
+using Interfaces.Services;
+using Services;
 using Zenject;
 
-public class KilledView : View<KilledView> 
+namespace UI
 {
-    private Player m_HumanPlayer;
-    private IBattleRoyaleService m_BattleRoyaleService;
-
-    [Inject]
-    public void Construct(IBattleRoyaleService battleRoyaleService)
+    public class KilledView : View<KilledView> 
     {
-        m_BattleRoyaleService = battleRoyaleService;
-    }
+        private Player m_HumanPlayer;
+        private IBattleRoyaleService m_BattleRoyaleService;
 
-    protected override void Awake()
-    {
-        base.Awake();
-        GameService.onGamePhaseChanged += OnGamePhaseChanged;
-    }
-
-    protected override void OnDestroySpecific()
-    {
-        base.OnDestroySpecific();
-        GameService.onGamePhaseChanged -= OnGamePhaseChanged;
-    }
-
-    protected override void OnGamePhaseChanged(GamePhase _GamePhase)
-    {
-        base.OnGamePhaseChanged(_GamePhase);
-        switch (_GamePhase)
+        [Inject]
+        public void Construct(IBattleRoyaleService battleRoyaleService)
         {
-            case GamePhase.GAME:
-                m_HumanPlayer = m_BattleRoyaleService.GetHumanPlayer();
-                m_HumanPlayer.onKilled += OnKilled;
-                m_HumanPlayer.onRevive += OnRevive;
-                break;
+            m_BattleRoyaleService = battleRoyaleService;
         }
-    }
 
-    void OnKilled()
-    {
-        Transition(true);
-    }
+        protected override void Awake()
+        {
+            base.Awake();
+            GameService.onGamePhaseChanged += OnGamePhaseChanged;
+        }
 
-    void OnRevive()
-    {
-        Transition(false);
+        protected override void OnDestroySpecific()
+        {
+            base.OnDestroySpecific();
+            GameService.onGamePhaseChanged -= OnGamePhaseChanged;
+        }
+
+        protected override void OnGamePhaseChanged(GamePhase _GamePhase)
+        {
+            base.OnGamePhaseChanged(_GamePhase);
+            switch (_GamePhase)
+            {
+                case GamePhase.GAME:
+                    m_HumanPlayer = m_BattleRoyaleService.GetHumanPlayer();
+                    m_HumanPlayer.onKilled += OnKilled;
+                    m_HumanPlayer.onRevive += OnRevive;
+                    break;
+            }
+        }
+
+        void OnKilled()
+        {
+            Transition(true);
+        }
+
+        void OnRevive()
+        {
+            Transition(false);
+        }
     }
 }

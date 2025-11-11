@@ -1,36 +1,38 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlayerName", menuName = "Hoover.io/PlayerName", order = 1)]
-public class PlayerNameData : ScriptableObject 
+namespace Gameplay.Data
 {
-	public List<string>			m_Names;
-
-	private List<int>			m_PickedIndexes;
-
-	public void Init()
+	[CreateAssetMenu(fileName = "PlayerName", menuName = "Hoover.io/PlayerName", order = 1)]
+	public class PlayerNameData : ScriptableObject 
 	{
-		if (m_PickedIndexes == null)
-			m_PickedIndexes = new List<int> ();
-		else
-			m_PickedIndexes.Clear ();
-	}
+		public List<string>			m_Names;
 
-	public string PickName()
-	{
-		int pickedIndex = 0;
-		do
+		private List<int>			m_PickedIndexes;
+
+		public void Init()
 		{
-			pickedIndex = Random.Range (0, m_Names.Count);
-		} while (m_PickedIndexes.Contains (pickedIndex));
+			if (m_PickedIndexes == null)
+				m_PickedIndexes = new List<int> ();
+			else
+				m_PickedIndexes.Clear ();
+		}
 
-		m_PickedIndexes.Add (pickedIndex);
+		public string PickName()
+		{
+			int pickedIndex = 0;
+			do
+			{
+				pickedIndex = Random.Range (0, m_Names.Count);
+			} while (m_PickedIndexes.Contains (pickedIndex));
 
-		string last = "";
-		if (Random.Range (0, 3) == 0)
-			last = Random.Range (1, 99).ToString ();
+			m_PickedIndexes.Add (pickedIndex);
 
-		return (m_Names [pickedIndex] + last);
+			string last = "";
+			if (Random.Range (0, 3) == 0)
+				last = Random.Range (1, 99).ToString ();
+
+			return (m_Names [pickedIndex] + last);
+		}
 	}
 }

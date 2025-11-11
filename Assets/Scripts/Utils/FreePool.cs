@@ -1,22 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class FreePool : MonoBehaviour 
+namespace Utils
 {
-	public string 		m_PoolName;
-	public float 		m_Duration = 1.0f;
-
-	private float 		m_Time;
-
-	void OnEnable()
+	public class FreePool : MonoBehaviour 
 	{
-		m_Time = Time.time;
-	}
+		public string 		m_PoolName;
+		public float 		m_Duration = 1.0f;
 
-	void Update()
-	{
-		if (Time.time - m_Time > m_Duration)
-			PoolSingleton.FreeInstance (m_PoolName, gameObject);
+		private float 		m_Time;
+
+		void OnEnable()
+		{
+			m_Time = Time.time;
+		}
+
+		void Update()
+		{
+			if (Time.time - m_Time > m_Duration)
+				PoolSingleton.FreeInstance (m_PoolName, gameObject);
+		}
 	}
 }

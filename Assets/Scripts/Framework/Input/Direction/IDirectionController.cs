@@ -1,10 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public interface IDirectionController
+namespace Framework.Input.Direction
 {
-    void OnStartMove();
-    void OnMove(Vector3 _Offset);
-    void OnEndMove();
+    public interface IDirectionController
+    {
+        void OnStartMove();
+        void OnMove(Vector3 _Offset);
+        void OnEndMove();
+    }
 }

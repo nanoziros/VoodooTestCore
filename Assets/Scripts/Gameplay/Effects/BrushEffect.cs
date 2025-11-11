@@ -1,26 +1,27 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public abstract class BrushEffect : MonoBehaviour
+namespace Gameplay.Effects
 {
-	public virtual void Play()
+	public abstract class BrushEffect : MonoBehaviour
 	{
-	}
+		public virtual void Play()
+		{
+		}
 
-	public virtual void Stop()
-	{
-	}
+		public virtual void Stop()
+		{
+		}
 
-	public virtual void SetColor(Color _Color)
-	{
-	}
+		public virtual void SetColor(Color _Color)
+		{
+		}
 
-	protected void SetParticleSysColor(ParticleSystem _Sys, Color _Color)
-	{
-		ParticleSystem.MainModule main = _Sys.main;
-		ParticleSystem.MinMaxGradient grad = main.startColor;
-		grad.color = _Color;
-		main.startColor = grad;
+		protected void SetParticleSysColor(ParticleSystem _Sys, Color _Color)
+		{
+			ParticleSystem.MainModule main = _Sys.main;
+			ParticleSystem.MinMaxGradient grad = main.startColor;
+			grad.color = _Color;
+			main.startColor = grad;
+		}
 	}
 }

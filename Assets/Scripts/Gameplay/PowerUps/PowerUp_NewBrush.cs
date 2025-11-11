@@ -1,37 +1,41 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Gameplay.Players;
+using Interfaces.Services;
+using UI;
 using UnityEngine;
 using Zenject;
 
-public class PowerUp_NewBrush : PowerUp {
+namespace Gameplay.PowerUps
+{
+    public class PowerUp_NewBrush : PowerUp {
 
-	public Color            m_ArrowColor;
-	private PlayerArrows    m_PlayerArrows;
-    private int             m_ArrowIndex;
-    private Player          m_HumanPlayer;
-    private IBattleRoyaleService m_BattleRoyaleService;
+        public Color            m_ArrowColor;
+        private PlayerArrows    m_PlayerArrows;
+        private int             m_ArrowIndex;
+        private Player          m_HumanPlayer;
+        private IBattleRoyaleService m_BattleRoyaleService;
 
-    [Inject]
-    public void ChildConstruct(IBattleRoyaleService battleRoyaleService)
-    {
-        m_BattleRoyaleService = battleRoyaleService;
+        [Inject]
+        public void ChildConstruct(IBattleRoyaleService battleRoyaleService)
+        {
+            m_BattleRoyaleService = battleRoyaleService;
 
-        Init();
-    }
+            Init();
+        }
 
-    public void Init()
-    {
-        m_PlayerArrows = PlayerArrows.Instance;
-        m_HumanPlayer = m_BattleRoyaleService.GetHumanPlayer();
-        m_ArrowIndex = m_PlayerArrows.Register(transform, m_ArrowColor, PlayerArrows.EArrowType.BRUSH);
-    }
+        public void Init()
+        {
+            m_PlayerArrows = PlayerArrows.Instance;
+            m_HumanPlayer = m_BattleRoyaleService.GetHumanPlayer();
+            m_ArrowIndex = m_PlayerArrows.Register(transform, m_ArrowColor, PlayerArrows.EArrowType.BRUSH);
+        }
 
-	public override void OnPlayerTouched(Player _Player)
-    {
-        base.OnPlayerTouched(_Player);
+        public override void OnPlayerTouched(Player _Player)
+        {
+            base.OnPlayerTouched(_Player);
 
-		_Player.AddBrush();
-        if (m_HumanPlayer.isEliminated == false)
-            m_PlayerArrows.Unregister(m_ArrowIndex);
+            _Player.AddBrush();
+            if (m_HumanPlayer.isEliminated == false)
+                m_PlayerArrows.Unregister(m_ArrowIndex);
+        }
     }
 }

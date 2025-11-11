@@ -1,20 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class BrushRotation : MonoBehaviour
+namespace UI
 {
-	// Cache
-	private Transform m_Transform;
-
-	void Awake()
+	public class BrushRotation : MonoBehaviour
 	{
 		// Cache
-		m_Transform = transform;
-	}
+		private Transform m_Transform;
 
-	void Update ()
-	{
-		m_Transform.RotateAround(m_Transform.position, m_Transform.up, Time.deltaTime * 90f);
+		void Awake()
+		{
+			// Cache
+			m_Transform = transform;
+		}
+
+		void Update ()
+		{
+			m_Transform.RotateAround(m_Transform.position, m_Transform.up, Time.deltaTime * 90f);
+		}
 	}
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace EmptyGame.Misc
+namespace Utils
 {
     public class ForcePreload : MonoBehaviour
     {
