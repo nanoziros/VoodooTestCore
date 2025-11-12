@@ -23,7 +23,8 @@ namespace UI
         public int m_IdSkin = 0;
         public GameObject m_PointsPerRank;
         public RankingView m_RankingView;
-
+        public Button m_SkinSelectionScreenButton;
+        
         [Header("Ranks")]
         public string[] m_Ratings;
 
@@ -44,6 +45,11 @@ namespace UI
 
             m_IsSkinSelectionScreenEnabled = m_FeatureFlagService.SkinSelectionScreenEnabled;
             m_IdSkin = m_StatsService.FavoriteSkin;
+        }
+
+        public void OnSkinSelectionScreenButton()
+        {
+            //TODO: open skin selection screen
         }
 
         public void OnPlayButton()
@@ -85,16 +91,18 @@ namespace UI
                 if (m_IsSkinSelectionScreenEnabled)
                 {
                     ManageOnMenuBrushSelectionDisplay(false);
-                    // todo: display skin selection screen
+                    m_SkinSelectionScreenButton.gameObject.SetActive(true);
                 }
                 else
                 {
                     ManageOnMenuBrushSelectionDisplay(true);
+                    m_SkinSelectionScreenButton.gameObject.SetActive(false);
                 }
             }
             else
             {
                 ManageOnMenuBrushSelectionDisplay(false);
+                m_SkinSelectionScreenButton.gameObject.SetActive(false);
             }
         }
         
