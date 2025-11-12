@@ -378,7 +378,7 @@ PrefabInstance:
     - target: {fileID: 7917347537907483533, guid: 61bc847c207d3024489b639bee6dab08,
         type: 3}
       propertyPath: m_Text
-      value: '<b>SKIN SELECTION: </b> Enabled'
+      value: '<b>SKIN SELECTION SCREEN: </b> Enabled'
       objectReference: {fileID: 0}
     - target: {fileID: 8115935834524041269, guid: 61bc847c207d3024489b639bee6dab08,
         type: 3}

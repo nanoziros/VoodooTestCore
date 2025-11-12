@@ -18858,6 +18858,7 @@ MonoBehaviour:
   - {fileID: 114630280725045258}
   m_ColoredTexts:
   - {fileID: 114692595092085978}
+  m_currentBrushSelectionParent: {fileID: 1054396209444862}
   m_BrushGroundLight: {fileID: 1779954615129550}
   m_BrushesPrefab: {fileID: 1043197933159812}
   m_IdSkin: 0

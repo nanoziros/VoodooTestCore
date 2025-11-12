@@ -18,7 +18,7 @@ namespace UI
         public List<Image> m_ColoredImages;
         public List<Text> m_ColoredTexts;
 
-        public GameObject m_BrushGroundLight;
+        public GameObject m_currentBrushSelectionParent;
         public GameObject m_BrushesPrefab;
         public int m_IdSkin = 0;
         public GameObject m_PointsPerRank;
@@ -28,17 +28,21 @@ namespace UI
         public string[] m_Ratings;
 
         private IStatsService m_StatsService;
+        private IFeatureFlagService m_FeatureFlagService;
+        private bool m_IsSkinSelectionScreenEnabled;
 
         [Inject]
-        public void Construct(IStatsService statsService)
+        public void Construct(IStatsService statsService, IFeatureFlagService featureFlagService)
         {
             m_StatsService = statsService;
+            m_FeatureFlagService = featureFlagService;
         }
 
         protected override void Awake()
         {
             base.Awake();
 
+            m_IsSkinSelectionScreenEnabled = m_FeatureFlagService.SkinSelectionScreenEnabled;
             m_IdSkin = m_StatsService.FavoriteSkin;
         }
 
@@ -55,33 +59,53 @@ namespace UI
             switch (_GamePhase)
             {
                 case GamePhase.MAIN_MENU:
-                    m_BrushGroundLight.SetActive(true);
+                    DisplayBrushSelectionMode(true);
                     Transition(true);
                     break;
 
                 case GamePhase.LOADING:
-                    ManageBrushDisplay(false);
+                    DisplayBrushSelectionMode(false);
 
                     if (m_Visible)
                         Transition(false);
                     break;
                 
                 case GamePhase.DEBUG:
-                    ManageBrushDisplay(false);
+                    DisplayBrushSelectionMode(false);
 
                     Transition(false);
                     break;
             }
         }
-        void ManageBrushDisplay(bool state)
+
+        void DisplayBrushSelectionMode(bool isSelectionEnabled)
         {
-            m_BrushGroundLight.SetActive(state);
+            if (isSelectionEnabled)
+            {
+                if (m_IsSkinSelectionScreenEnabled)
+                {
+                    ManageOnMenuBrushSelectionDisplay(false);
+                    // todo: display skin selection screen
+                }
+                else
+                {
+                    ManageOnMenuBrushSelectionDisplay(true);
+                }
+            }
+            else
+            {
+                ManageOnMenuBrushSelectionDisplay(false);
+            }
+        }
+        
+        void ManageOnMenuBrushSelectionDisplay(bool state)
+        {
+            m_currentBrushSelectionParent.SetActive(state);
             m_BrushesPrefab.SetActive(state);
         }
 
         public void SetTitleColor(Color _Color)
         {
-            m_BrushesPrefab.SetActive(true);
             int favoriteSkin = Mathf.Min(m_StatsService.FavoriteSkin, GameService.m_Skins.Count - 1);
             m_BrushesPrefab.GetComponent<BrushMainMenu>().Set(GameService.m_Skins[favoriteSkin]);
             string playerName = m_StatsService.GetNickname();
