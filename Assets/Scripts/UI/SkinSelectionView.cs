@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using Gameplay.Data;
 using Services;
 using UnityEngine;
 using Utils;
@@ -11,14 +9,10 @@ namespace UI
         public Transform m_SkinOptionsParent;
         public SkinOptionButton m_SkinOptionButtonPrefab;
         public LayerMask m_PreviewLayerMask;
-        public Vector2 worldSpanPerTile; // todo: understand this field
-
+        public int m_TotalVariants = 12;
         public Vector2Int m_SkinPreviewTileResolution = new Vector2Int(128, 128);
         private SkinPreviewGridBuilder m_SkinPreviewGridBuilder;
-
-        // todo: duplicated in SkinPreviewGridBuilder
-        const int c_TotalVariants = 12;
-
+        
         protected override void Awake()
         {
             base.Awake();
@@ -30,11 +24,11 @@ namespace UI
             m_SkinPreviewGridBuilder = new SkinPreviewGridBuilder(
                 m_PreviewCamera,
                 m_SkinPreviewTileResolution,
-                worldSpanPerTile,
+                m_TotalVariants,
                 m_PreviewLayerMask);
             m_SkinPreviewGridBuilder.Build();
             
-            for (int index = 0; index < c_TotalVariants; index++)
+            for (int index = 0; index < m_TotalVariants; index++)
             {
                 SkinOptionButton skinOptionButton = Instantiate(m_SkinOptionButtonPrefab, m_SkinOptionsParent);
                 skinOptionButton.transform.localPosition = Vector3.zero;

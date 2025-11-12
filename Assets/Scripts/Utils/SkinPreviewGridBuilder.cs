@@ -15,25 +15,23 @@ namespace Utils
         private Transform m_PreviewRootParent;
         private int m_AtlasColumns;
         private int m_AtlasRows;
+        private int m_TotalVariants;
 
         const int c_RenderTextureDepth = 16;
         
-        // todo: duplicated in skin selection view
-        const int c_TotalVariants = 12;
-        
-        public SkinPreviewGridBuilder(Camera previewCamera,Vector2Int tilePixelSize, Vector2 worldSpanPerTile, LayerMask previewLayerMask)
+        public SkinPreviewGridBuilder(Camera previewCamera,Vector2Int tilePixelSize, int totalVariants, LayerMask previewLayerMask)
         {
             m_PreviewCamera = previewCamera;
             m_TilePixelSize = tilePixelSize;
-            m_WorldSpanPerTile = worldSpanPerTile;
             m_PreviewLayerMask = previewLayerMask;
+            m_TotalVariants = totalVariants;
         }
         
         public void Build()
         {
             // We try to roughly have a squared grid atlas
-            m_AtlasColumns = Mathf.CeilToInt(Mathf.Sqrt(c_TotalVariants));
-            m_AtlasRows = Mathf.CeilToInt((float)c_TotalVariants / m_AtlasColumns);
+            m_AtlasColumns = Mathf.CeilToInt(Mathf.Sqrt(m_TotalVariants));
+            m_AtlasRows = Mathf.CeilToInt((float)m_TotalVariants / m_AtlasColumns);
             
             // We determine the RT dimensions based on our individual tile pixel resolution
             int pixelWidth = m_AtlasColumns * m_TilePixelSize.x;
