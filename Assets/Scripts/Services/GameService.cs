@@ -21,6 +21,7 @@ namespace Services
         GAME,
         PRE_END,
         END,
+        SKIN_SELECTION,
         DEBUG
     }
 

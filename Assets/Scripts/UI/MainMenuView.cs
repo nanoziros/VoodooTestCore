@@ -49,7 +49,8 @@ namespace UI
 
         public void OnSkinSelectionScreenButton()
         {
-            //TODO: open skin selection screen
+            if (GameService.currentPhase == GamePhase.MAIN_MENU)
+                GameService.ChangePhase(GamePhase.SKIN_SELECTION);
         }
 
         public void OnPlayButton()
@@ -70,16 +71,11 @@ namespace UI
                     break;
 
                 case GamePhase.LOADING:
-                    DisplayBrushSelectionMode(false);
-
-                    if (m_Visible)
-                        Transition(false);
-                    break;
-                
+                case GamePhase.SKIN_SELECTION:
                 case GamePhase.DEBUG:
                     DisplayBrushSelectionMode(false);
-
-                    Transition(false);
+                    if (m_Visible)
+                        Transition(false);
                     break;
             }
         }
