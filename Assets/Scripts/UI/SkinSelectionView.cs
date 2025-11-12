@@ -1,13 +1,49 @@
+using System.Collections.Generic;
+using Gameplay.Data;
 using Services;
+using UnityEngine;
+using Utils;
 namespace UI
 {
     public class SkinSelectionView :  View<SkinSelectionView>
     {
+        public Camera m_PreviewCamera;
+        public Transform m_SkinOptionsParent;
+        public SkinOptionButton m_SkinOptionButtonPrefab;
+        public LayerMask m_PreviewLayerMask;
+        public Vector2 worldSpanPerTile; // todo: understand this field
+
+        public Vector2Int m_SkinPreviewTileResolution = new Vector2Int(128, 128);
+        private SkinPreviewGridBuilder m_SkinPreviewGridBuilder;
+
+        // todo: duplicated in SkinPreviewGridBuilder
+        const int c_TotalVariants = 12;
+
         protected override void Awake()
         {
             base.Awake();
+            PopulateSkins();
+        }
 
-            // todo:
+        private void PopulateSkins()
+        {
+            m_SkinPreviewGridBuilder = new SkinPreviewGridBuilder(
+                m_PreviewCamera,
+                m_SkinPreviewTileResolution,
+                worldSpanPerTile,
+                m_PreviewLayerMask);
+            m_SkinPreviewGridBuilder.Build();
+            
+            for (int index = 0; index < c_TotalVariants; index++)
+            {
+                SkinOptionButton skinOptionButton = Instantiate(m_SkinOptionButtonPrefab, m_SkinOptionsParent);
+                skinOptionButton.transform.localPosition = Vector3.zero;
+                skinOptionButton.transform.localRotation = Quaternion.identity;
+                skinOptionButton.transform.localScale = Vector3.one;
+                
+                skinOptionButton.m_RawImageContent.texture = m_SkinPreviewGridBuilder.m_AtlasRenderTexture;
+                skinOptionButton.m_RawImageContent.uvRect  = m_SkinPreviewGridBuilder.GetVariantUvRect(index);
+            }
         }
         
         public void OnClickBackButton()
