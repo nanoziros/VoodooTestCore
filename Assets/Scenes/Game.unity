@@ -661,7 +661,7 @@ Transform:
   m_GameObject: {fileID: 104680031}
   serializedVersion: 2
   m_LocalRotation: {x: -0.30070576, y: 0, z: 0, w: 0.953717}
-  m_LocalPosition: {x: -2.02, y: 2.35, z: 0}
+  m_LocalPosition: {x: -1.6, y: 2.35, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8266,10 +8266,20 @@ PrefabInstance:
       propertyPath: m_PreviewCamera
       value: 
       objectReference: {fileID: 598335081}
+    - target: {fileID: 3981389484224182901, guid: 7552fcea3c3b4b1448d38badaefa6c2d,
+        type: 3}
+      propertyPath: m_SkinPreviewTileResolution.x
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 3981389484224182901, guid: 7552fcea3c3b4b1448d38badaefa6c2d,
+        type: 3}
+      propertyPath: m_SkinPreviewTileResolution.y
+      value: 128
+      objectReference: {fileID: 0}
     - target: {fileID: 5191162768343273270, guid: 7552fcea3c3b4b1448d38badaefa6c2d,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.00075922813
+      value: 0.0005582928
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
