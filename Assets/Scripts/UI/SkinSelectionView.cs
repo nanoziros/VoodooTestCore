@@ -1,8 +1,11 @@
 using System.Collections.Generic;
 using Gameplay.Data;
+using Interfaces.Services;
 using Services;
 using UnityEngine;
+using UnityEngine.UI;
 using Utils;
+using Zenject;
 namespace UI
 {
     public class SkinSelectionView :  View<SkinSelectionView>
@@ -10,11 +13,33 @@ namespace UI
         public SkinPreviewGrid m_SkinPreviewGrid;
         public Transform m_SkinOptionsParent;
         public SkinOptionButton m_SkinOptionButtonPrefab;
+        public RawImage m_currentBrush;
+        
+        private Dictionary<GameObject, Rect> m_UniqueModelsUvRect;
+        
+        private IStatsService m_StatsService;
+
+        [Inject]
+        public void Construct(IStatsService statsService)
+        {
+            m_StatsService = statsService;
+        }
         
         protected override void Awake()
         {
             base.Awake();
             PopulateSkins();
+        }
+
+        private void SelectSkin(int skinId)
+        {
+            m_StatsService.FavoriteSkin = skinId;
+            
+            List<SkinData> skinsData = GameService.m_Skins;
+            SkinData skinData = skinsData[skinId];
+            
+            m_currentBrush.color = skinData.Color.m_Colors[0];
+            m_currentBrush.uvRect = m_UniqueModelsUvRect[skinData.Brush.m_PreviewPrefab];
         }
 
         private void PopulateSkins()
@@ -49,7 +74,9 @@ namespace UI
             sharedUiMat.SetTexture("_MainTex", atlasRenderTexture);
             sharedUiMat.SetTexture("_MaskTex", atlasMaskRenderTexture);
             
-            Dictionary<GameObject, Rect> uniqueModelsUvRect = new Dictionary<GameObject, Rect>();
+            m_currentBrush.material = sharedUiMat;
+            
+            m_UniqueModelsUvRect = new Dictionary<GameObject, Rect>();
             for (int index = 0; index < uniqueModels.Count; index++)
             {
                 GameObject uniqueModel = uniqueModels[index];
@@ -65,7 +92,7 @@ namespace UI
 
                 Rect uvRect =  new Rect(uMin, vMin, tileWidth, tileHeight);
                 
-                uniqueModelsUvRect.Add(uniqueModel, uvRect);
+                m_UniqueModelsUvRect.Add(uniqueModel, uvRect);
             }
 
             for (int index = 0; index < totalVariants; index++)
@@ -79,10 +106,14 @@ namespace UI
 
                 skinOptionButton.m_RawImageContent.material = sharedUiMat;
                 skinOptionButton.m_RawImageContent.color = skinData.Color.m_Colors[0];
-                skinOptionButton.m_RawImageContent.uvRect = uniqueModelsUvRect[skinData.Brush.m_PreviewPrefab];
+                skinOptionButton.m_RawImageContent.uvRect = m_UniqueModelsUvRect[skinData.Brush.m_PreviewPrefab];
 
-                skinOptionButton.SetData(skinData);
+                int currentIndex = index;
+                skinOptionButton.m_Button.onClick.AddListener(() => SelectSkin(currentIndex));
             }
+            
+            int favoriteSkin = Mathf.Min(m_StatsService.FavoriteSkin, GameService.m_Skins.Count - 1);
+            SelectSkin(favoriteSkin);
         }
         
         public void OnClickBackButton()

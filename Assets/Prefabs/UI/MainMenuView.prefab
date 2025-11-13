@@ -18857,6 +18857,7 @@ MonoBehaviour:
   - {fileID: 114293722423702420}
   - {fileID: 114318337029926596}
   - {fileID: 114630280725045258}
+  - {fileID: 9039926343267871069}
   m_ColoredTexts:
   - {fileID: 114692595092085978}
   m_currentBrushSelectionParent: {fileID: 1054396209444862}
@@ -24350,7 +24351,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1348489755097480971
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24447,7 +24448,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.38823533, g: 0.25882354, b: 0.882353, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
