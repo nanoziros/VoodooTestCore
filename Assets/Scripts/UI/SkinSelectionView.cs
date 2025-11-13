@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Gameplay.Data;
 using Services;
 using UnityEngine;
 using Utils;
@@ -5,13 +7,9 @@ namespace UI
 {
     public class SkinSelectionView :  View<SkinSelectionView>
     {
-        public Camera m_PreviewCamera;
+        public SkinPreviewGrid m_SkinPreviewGrid;
         public Transform m_SkinOptionsParent;
         public SkinOptionButton m_SkinOptionButtonPrefab;
-        public LayerMask m_PreviewLayerMask;
-        public int m_TotalVariants = 12;
-        public Vector2Int m_SkinPreviewTileResolution = new Vector2Int(128, 128);
-        private SkinPreviewGridBuilder m_SkinPreviewGridBuilder;
         
         protected override void Awake()
         {
@@ -21,22 +19,69 @@ namespace UI
 
         private void PopulateSkins()
         {
-            m_SkinPreviewGridBuilder = new SkinPreviewGridBuilder(
-                m_PreviewCamera,
-                m_SkinPreviewTileResolution,
-                m_TotalVariants,
-                m_PreviewLayerMask);
-            m_SkinPreviewGridBuilder.Build();
+            List<SkinData> skinsData = GameService.m_Skins;
+            int totalVariants = skinsData.Count;
             
-            for (int index = 0; index < m_TotalVariants; index++)
+            // Setup preview skin models
+            List<GameObject> uniqueModels = new List<GameObject>();
+            foreach (var skinData in skinsData)
             {
+                if (!uniqueModels.Contains(skinData.Brush.m_PreviewPrefab))
+                {
+                    uniqueModels.Add(skinData.Brush.m_PreviewPrefab);
+                }
+            }
+            
+            int totalModels = uniqueModels.Count;
+            int cols = Mathf.CeilToInt(Mathf.Sqrt(totalModels));
+            int rows = Mathf.CeilToInt((float)totalModels / cols);
+            
+            m_SkinPreviewGrid.Setup(
+                totalModels, 
+                cols, 
+                rows,
+                uniqueModels,
+                out RenderTexture atlasRenderTexture,
+                out RenderTexture atlasMaskRenderTexture);
+            
+            Material sharedUiMat = new Material(m_SkinOptionButtonPrefab.m_RawImageContent.material);
+            sharedUiMat.name = "UI_RecolorMat_Runtime";
+            sharedUiMat.SetTexture("_MainTex", atlasRenderTexture);
+            sharedUiMat.SetTexture("_MaskTex", atlasMaskRenderTexture);
+            
+            Dictionary<GameObject, Rect> uniqueModelsUvRect = new Dictionary<GameObject, Rect>();
+            for (int index = 0; index < uniqueModels.Count; index++)
+            {
+                GameObject uniqueModel = uniqueModels[index];
+
+                int col = index % cols; 
+                int row = index / cols; 
+
+                float tileWidth  = 1f / cols;
+                float tileHeight = 1f / rows;
+
+                float uMin = col * tileWidth;
+                float vMin = row * tileHeight;
+
+                Rect uvRect =  new Rect(uMin, vMin, tileWidth, tileHeight);
+                
+                uniqueModelsUvRect.Add(uniqueModel, uvRect);
+            }
+
+            for (int index = 0; index < totalVariants; index++)
+            {
+                SkinData skinData = skinsData[index];
+                
                 SkinOptionButton skinOptionButton = Instantiate(m_SkinOptionButtonPrefab, m_SkinOptionsParent);
                 skinOptionButton.transform.localPosition = Vector3.zero;
                 skinOptionButton.transform.localRotation = Quaternion.identity;
                 skinOptionButton.transform.localScale = Vector3.one;
-                
-                skinOptionButton.m_RawImageContent.texture = m_SkinPreviewGridBuilder.m_AtlasRenderTexture;
-                skinOptionButton.m_RawImageContent.uvRect  = m_SkinPreviewGridBuilder.GetVariantUvRect(index);
+
+                skinOptionButton.m_RawImageContent.material = sharedUiMat;
+                skinOptionButton.m_RawImageContent.color = skinData.Color.m_Colors[0];
+                skinOptionButton.m_RawImageContent.uvRect = uniqueModelsUvRect[skinData.Brush.m_PreviewPrefab];
+
+                skinOptionButton.SetData(skinData);
             }
         }
         
@@ -52,9 +97,11 @@ namespace UI
             switch (_GamePhase)
             {
                 case GamePhase.SKIN_SELECTION:
+                    m_SkinPreviewGrid.gameObject.SetActive(true);
                     Transition(true);
                     break;
                 default:
+                    m_SkinPreviewGrid.gameObject.SetActive(false);
                     if (m_Visible)
                         Transition(false);
                     break;

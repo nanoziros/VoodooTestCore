@@ -6,5 +6,6 @@ namespace Gameplay.Data
 	public class BrushData : ScriptableObject
 	{
 		public GameObject 	m_Prefab;
+		public GameObject 	m_PreviewPrefab;
 	}
 }

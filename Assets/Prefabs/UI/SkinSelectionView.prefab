@@ -54,14 +54,10 @@ MonoBehaviour:
   m_FadeInDuration: 0.3
   m_FadeOutDuration: 0.3
   m_Group: {fileID: 2384793037185911235}
-  m_PreviewCamera: {fileID: 0}
+  m_SkinPreviewGrid: {fileID: 0}
   m_SkinOptionsParent: {fileID: 5191162768343273270}
   m_SkinOptionButtonPrefab: {fileID: 5439980181742565143, guid: 2a81f2f3a9a35c442b43c6428489fd42,
     type: 3}
-  m_PreviewLayerMask:
-    serializedVersion: 2
-    m_Bits: 2048
-  worldSpanPerTile: {x: 0, y: 0}
   m_SkinPreviewTileResolution: {x: 128, y: 128}
 --- !u!225 &2384793037185911235
 CanvasGroup:
@@ -352,7 +348,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.00031474433, y: 0.00041119798}
+  m_AnchoredPosition: {x: -0.00031474433, y: -0.00016298963}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &4913009719655978333
