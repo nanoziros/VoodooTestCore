@@ -23,6 +23,7 @@ namespace UI
         public int m_IdSkin = 0;
         public GameObject m_PointsPerRank;
         public RankingView m_RankingView;
+        public BoosterModeView m_BoosterModeView;
         public Button m_SkinSelectionScreenButton;
         
         [Header("Ranks")]
@@ -45,6 +46,8 @@ namespace UI
 
             m_IsSkinSelectionScreenEnabled = m_FeatureFlagService.SkinSelectionScreenEnabled;
             m_IdSkin = m_StatsService.FavoriteSkin;
+            
+            m_BoosterModeView.gameObject.SetActive(m_FeatureFlagService.BoosterGameModeEnabled);
         }
 
         public void OnSkinSelectionScreenButton()
@@ -57,6 +60,11 @@ namespace UI
         {
             if (GameService.currentPhase == GamePhase.MAIN_MENU)
                 GameService.ChangePhase(GamePhase.LOADING);
+        }
+        
+        public void OnBoosterModeButton()
+        {
+            // todo:
         }
 
         protected override void OnGamePhaseChanged(GamePhase _GamePhase)
