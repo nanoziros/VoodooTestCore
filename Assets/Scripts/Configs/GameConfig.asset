@@ -21,3 +21,21 @@ MonoBehaviour:
   m_HumanSpotlight: {fileID: 5301977967824784285, guid: d474f8182467e4237a8b2cf7ae74577b,
     type: 3}
   m_XPByRank: 640000004b000000320000002300000019000000140000000f0000000a0000000500000001000000
+  m_BoosterModePowerUpConfigByLevel:
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps: []
+  - m_BrushPowerUpEnabled: 1
+    m_EnabledPowerUps: []
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: 707909f05d8274438a62b7a0fec4fa9b, type: 2}
+  - m_BrushPowerUpEnabled: 1
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
+  - m_BrushPowerUpEnabled: 1
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
+    - {fileID: 11400000, guid: 707909f05d8274438a62b7a0fec4fa9b, type: 2}
