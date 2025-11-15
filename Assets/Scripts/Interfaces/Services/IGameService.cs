@@ -13,6 +13,7 @@ namespace Interfaces.Services
         event Action onEndGame;
         event Action onScoresCalculated;
         bool m_IsPlaying { get; set; }
+        GameMode currentGameMode { get; }
         GamePhase currentPhase { get; }
         int m_PlayerSkinID { get; set; }
         List<SkinData> m_Skins { get; set; }
@@ -27,5 +28,6 @@ namespace Interfaces.Services
         void SkipRV();
         void TryRevive();
         Player GetBestPlayer();
+        void SetGameMode(GameMode gameMode);
     }
 }

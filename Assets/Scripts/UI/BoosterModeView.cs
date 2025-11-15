@@ -1,5 +1,6 @@
 ﻿
 using Interfaces.Services;
+using Services;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,6 +23,8 @@ namespace UI
         void Awake()
         {
             m_BoosterButton.onClick.AddListener(MainMenuView.Instance.OnBoosterModeButton);
+            
+            m_LevelText.text = $"Lvl {m_StatsService.GetPlayerLevel(GameMode.BOOSTER)}";
         }
     }
 }

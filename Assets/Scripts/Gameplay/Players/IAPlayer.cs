@@ -61,7 +61,7 @@ namespace Gameplay.Players
 			m_Agressivity = Random.Range(c_MinAgressivity, c_MaxAgressivity);
 			m_LerpFactor = c_NormalLerpFactor;
 			m_LastCheckTime = Time.time;
-			m_Difficulty = Random.Range(Mathf.Clamp01(StatsService.GetLevel() / 2f), 1f);
+			m_Difficulty = Random.Range(Mathf.Clamp01(StatsService.GetLevel(GameService.currentGameMode) / 2f), 1f);
 			m_SqrCheckRadius = c_SqrCheckRadius + c_DifficultyCheckRadius * m_Difficulty;
 			Check();
 			ChangeMoveStatus(false);

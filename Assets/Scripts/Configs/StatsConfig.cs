@@ -7,5 +7,6 @@ namespace Configs
     public class StatsConfig : ScriptableObject
     {
         public List<int>    m_XPForLevel;
+        public List<int>    m_XPForBoosterLevel;
     }
 }

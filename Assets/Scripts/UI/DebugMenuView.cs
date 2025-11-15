@@ -1,6 +1,5 @@
 ﻿using Interfaces.Services;
 using Services;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Utils;
 using Zenject;
@@ -10,8 +9,7 @@ namespace UI
     {
         public Toggle m_BoosterModeToggle;
         public Toggle m_SkinChangeToggle;
-        public Button m_resetPlayerButton;
-   
+        
         private IFeatureFlagService  m_FeatureFlagService;
         
         [Inject]
@@ -37,13 +35,6 @@ namespace UI
                 m_FeatureFlagService.SkinSelectionScreenEnabled = newState;
             });
             m_SkinChangeToggle.isOn = m_FeatureFlagService.SkinSelectionScreenEnabled;
-            
-            // Bind reset player button
-            m_resetPlayerButton.onClick.AddListener(() =>
-            {
-                PlayerPrefsUtility.DeleteAll();
-                OnClickContinueButton();
-            });
         }
         
         public void OnClickContinueButton()

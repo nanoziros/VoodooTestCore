@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Configs;
 using Gameplay;
 using Gameplay.Data;
@@ -14,6 +15,12 @@ using Random = UnityEngine.Random;
 
 namespace Services
 {
+    public enum GameMode
+    {
+        NORMAL,
+        BOOSTER
+    }
+    
     public enum GamePhase
     {
         MAIN_MENU,
@@ -57,9 +64,11 @@ namespace Services
         public int m_PlayerSkinID { get; set; }
 
         public GamePhase currentPhase { get; private set; }
+        public GameMode currentGameMode { get; private set; }
+        
         public List<Player> m_Players { get; set; }
         public List<int> m_XPByRank => m_GameConfig.m_XPByRank;
-
+        
         public bool m_AlreadyRevive = false;
 
         // Cache
@@ -70,7 +79,7 @@ namespace Services
         private ITerrainService m_TerrainService;
 
         private Transform m_HumanPlayerTr;
-
+        
         public bool m_IsPlaying { get; set; }
         private float m_Level;
         public float level { get { return m_Level; } }
@@ -87,6 +96,7 @@ namespace Services
         private List<Color> m_Colors;
         private List<Vector3> m_PopPoints;
         private List<PowerUpData> m_PowerUps;
+        private List<PowerUpData> m_ActivePowerUps;
         private PlayerNameData m_PlayerNameData;
         private List<GameObject> m_Objects; // Powerups and other map objects
         private List<Player> m_OrderedPlayers;
@@ -187,7 +197,7 @@ namespace Services
             m_PosBuffer = Vector3.zero;
 
 #if UNITY_EDITOR
-            Debug.Log("Current difficulty is " + m_StatsService.GetLevel());
+            Debug.Log("Current difficulty is " + m_StatsService.GetLevel(GameMode.NORMAL));
 #endif
             ChangePhase(GamePhase.MAIN_MENU);
         }
@@ -206,6 +216,11 @@ namespace Services
             LoadingView.Instance.SetTitleColor(humanColor);
         }
 
+        public void SetGameMode(GameMode _GameMode)
+        {
+            currentGameMode = _GameMode;
+        }
+
         public void ChangePhase(GamePhase _GamePhase)
         {
             switch (_GamePhase)
@@ -218,8 +233,9 @@ namespace Services
                 case GamePhase.LOADING:
                     m_LastBrushTime = Time.time;
                     m_LastPowerUpTime = Time.time;
+                    m_ActivePowerUps = GetPossiblePowerUps(currentGameMode);
                     m_PowerUpRate = Random.Range(c_MinPowerUpRate, c_MaxPowerUpRate);
-                    m_Level = m_StatsService.GetLevel();
+                    m_Level = m_StatsService.GetLevel(currentGameMode);
                     PopPlayers();
 
                     if (m_OrderedPlayers == null)
@@ -236,7 +252,7 @@ namespace Services
 
                 case GamePhase.END:
                     int playerScore = Mathf.RoundToInt(m_Players[0].percent * 100.0f);
-                    m_StatsService.TryToSetBestScore(playerScore);
+                    m_StatsService.TryToSetBestScore(currentGameMode, playerScore);
 
                     int rankingScore = -1; // Difficulty down by default
                     int playerRank = m_BattleRoyaleService.GetHumanPlayer().m_Rank;
@@ -246,11 +262,10 @@ namespace Services
                     else if (playerRank >= 2) // Second or third, then stay at same difficulty
                         rankingScore = 0;
 
-                    m_StatsService.AddGameResult(rankingScore);
-                    int xp = m_XPByRank[playerRank];
-                    m_StatsService.SetLastXP(xp);
+                    m_StatsService.AddGameResult(currentGameMode, rankingScore);
+                    m_StatsService.SetLastXP(currentGameMode, m_XPByRank[playerRank]);
                     PreEndView.Instance.LaunchPreEnd();
-                    m_StatsService.GainXP();
+                    m_StatsService.GainXP(currentGameMode);
                     break;
             }
 
@@ -258,6 +273,23 @@ namespace Services
 
             if (onGamePhaseChanged != null)
                 onGamePhaseChanged.Invoke(_GamePhase);
+        }
+        private List<PowerUpData> GetPossiblePowerUps(GameMode gameMode)
+        {
+            List<PowerUpData> powerUps = new List<PowerUpData>();
+            switch (gameMode)
+            {
+                case GameMode.BOOSTER:
+                    // todo: implement booster mode
+                    break;
+                default:
+                    foreach (PowerUpData powerUpData in m_PowerUps.Where(powerUpData => !powerUpData.isBoosterModeExclusive))
+                    {
+                        m_ActivePowerUps.Add(powerUpData);
+                    }
+                    break;
+            }
+            return powerUps;
         }
 
         public void AddMapObject(GameObject _Object)
@@ -382,7 +414,7 @@ namespace Services
                 m_PowerUpRate = Random.Range(c_MinPowerUpRate, c_MaxPowerUpRate);
                 m_LastPowerUpTime = Time.time;
 
-                PowerUpData powerUpData = m_PowerUps[Random.Range(0, m_PowerUps.Count)];
+                PowerUpData powerUpData = m_ActivePowerUps[Random.Range(0, m_ActivePowerUps.Count)];
                 PopObjectRandomly(powerUpData.m_Prefab);
             }
 
@@ -424,7 +456,7 @@ namespace Services
         {
             return m_PowerUps[Random.Range(0, m_PowerUps.Count)].m_Prefab;
         }
-
+        
         public Player GetBestPlayer()
         {
             float maxPercent = 0f;

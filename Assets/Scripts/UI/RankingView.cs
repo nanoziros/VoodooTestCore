@@ -1,4 +1,5 @@
 ﻿using Interfaces.Services;
+using Services;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -29,18 +30,22 @@ namespace UI
 
         public void RefreshNormal()
         {
-            int tmpLvl = m_StatsService.GetPlayerLevel() - 1;
+            int playerLevel = m_StatsService.GetPlayerLevel(GameMode.NORMAL);
+            int currentXp = m_StatsService.GetXP(GameMode.NORMAL);
+            int nextLevelXp = m_StatsService.XPToNextLevel(GameMode.NORMAL, playerLevel - 1);
+            
+            int tmpLvl = playerLevel- 1;
             if (tmpLvl >= MainMenuView.Instance.m_Ratings.Length)
             {
                 tmpLvl = MainMenuView.Instance.m_Ratings.Length - 1;
             }
 
-            m_CurrentXPText.text = m_StatsService.GetXP().ToString() + "/" + m_StatsService.XPToNextLevel(m_StatsService.GetPlayerLevel() - 1).ToString();
-            m_CurrentLevelText.text = m_StatsService.GetPlayerLevel().ToString();
-            m_LevelCrownText.text = "LVL" + m_StatsService.GetPlayerLevel().ToString();
-            m_NextLevelText.text = (m_StatsService.GetPlayerLevel() + 1).ToString();
+            m_CurrentXPText.text = currentXp + "/" + nextLevelXp;
+            m_CurrentLevelText.text = playerLevel.ToString();
+            m_LevelCrownText.text = "LVL" + playerLevel;
+            m_NextLevelText.text = (playerLevel + 1).ToString();
 
-            float levelPercent = (float)m_StatsService.GetXP() / (float)m_StatsService.XPToNextLevel(m_StatsService.GetPlayerLevel() - 1);
+            float levelPercent = currentXp / (float)nextLevelXp;
             m_XPBar.rectTransform.anchorMax = new Vector2(levelPercent, 1f);
             m_XPBar.rectTransform.anchoredPosition = Vector2.zero;
             m_XPBar.gameObject.SetActive(levelPercent > 0.02f);

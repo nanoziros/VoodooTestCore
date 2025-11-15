@@ -21,15 +21,17 @@ namespace Gameplay
         // Cache
         private Transform       m_Transform;
         private IStatsService    m_StatsService;
+        private IGameService     m_GameService;
 
         // Buffers
         private Vector3         m_StartPos;
         private Vector3         m_EndPos;
 
         [Inject]
-        public void Construct(IStatsService statsService)
+        public void Construct(IStatsService statsService, IGameService gameService)
         {
             m_StatsService = statsService;
+            m_GameService = gameService;
         }
 
         void Awake ()
@@ -46,7 +48,7 @@ namespace Gameplay
 
         void OnEnable ()
         {
-            float lvlPercent = ((float) m_StatsService.GetLevel()) / ((float) Constants.c_MaxLevel);
+            float lvlPercent = ((float) m_StatsService.GetLevel(m_GameService.currentGameMode)) / ((float) Constants.c_MaxLevel);
             m_RRotSpeed = Mathf.Lerp(m_MinRotSpeed, m_MaxRotSpeed, lvlPercent);
             m_RMinY = Mathf.Lerp(0.0f, m_MinY, lvlPercent);
             m_RMaxY = Mathf.Lerp(0.0f, m_MaxY, lvlPercent);

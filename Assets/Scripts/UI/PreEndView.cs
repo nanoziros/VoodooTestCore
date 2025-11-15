@@ -39,8 +39,8 @@ namespace UI
 		private void Start()
 		{
 			m_XBLeftText.text = "";
-			m_XP = m_StatsService.GetXP();
-			m_Level = m_StatsService.GetPlayerLevel();
+			m_XP = m_StatsService.GetXP(GameService.currentGameMode);
+			m_Level = m_StatsService.GetPlayerLevel(GameService.currentGameMode);
 		}
 
 		protected override void Update()
@@ -58,8 +58,6 @@ namespace UI
 			switch (_GamePhase)
 			{
 				case GamePhase.GAME: //Save level and xp before they got changed
-
-				
 					m_XPGain = 0;
 					break;
 				case GamePhase.END:
@@ -70,8 +68,8 @@ namespace UI
 
 		public void LaunchPreEnd()
 		{
-			m_XP = m_StatsService.GetXP();
-			m_Level = m_StatsService.GetPlayerLevel() - 1;
+			m_XP = m_StatsService.GetXP(GameService.currentGameMode);
+			m_Level = m_StatsService.GetPlayerLevel(GameService.currentGameMode) - 1;
 			Transition(true);
 			Display(m_BattleRoyaleService.GetHumanPlayer().m_Color);
 			StartCoroutine(PreEndCoroutine());
@@ -112,10 +110,10 @@ namespace UI
 
 		void SetXPBar(int _CurrentLevel, int _CurrentXP)
 		{
-			float levelPercent = (float)_CurrentXP / (float)m_StatsService.XPToNextLevel(_CurrentLevel);
+			float levelPercent = (float)_CurrentXP / (float)m_StatsService.XPToNextLevel(GameService.currentGameMode, _CurrentLevel);
 			m_XPBar.gameObject.SetActive(levelPercent > 0.02f);
 
-			m_CurrentXPText.text = _CurrentXP.ToString() + "/" + m_StatsService.XPToNextLevel(_CurrentLevel);
+			m_CurrentXPText.text = _CurrentXP.ToString() + "/" + m_StatsService.XPToNextLevel(GameService.currentGameMode, _CurrentLevel);
 			m_CurrentLevelText.text = (_CurrentLevel + 1).ToString();
 			m_NextLevelText.text = (_CurrentLevel + 2).ToString();
 			m_XPBar.rectTransform.anchorMax = new Vector2(levelPercent, 1f);
@@ -126,21 +124,22 @@ namespace UI
 		{
 			m_XP += _XP - m_XPGain;
 
-			if (m_XP > m_StatsService.XPToNextLevel(m_Level))
+			if (m_XP > m_StatsService.XPToNextLevel(GameService.currentGameMode, m_Level))
 			{
-				m_XP -= m_StatsService.XPToNextLevel(m_Level);
+				m_XP -= m_StatsService.XPToNextLevel(GameService.currentGameMode, m_Level);
 				m_Level += 1;
 		
 			}
 
 			SetXPBar(m_Level, m_XP);
 			m_XPGain = _XP;
-			m_XBLeftText.text = (m_StatsService.m_LastGain > 0 ? "+" : "") + (m_StatsService.m_LastGain  - _XP).ToString();
+			int lastGain = m_StatsService.GetLastGain(GameService.currentGameMode);
+			m_XBLeftText.text = (lastGain > 0 ? "+" : "") + (lastGain - _XP).ToString();
 		}
 
 		IEnumerator PreEndCoroutine()
 		{
-			m_LastGain = m_StatsService.m_LastGain;
+			m_LastGain = m_StatsService.GetLastGain(GameService.currentGameMode);
 
 			m_XPGain = 0;
 			yield return new WaitForSeconds(1.5f);

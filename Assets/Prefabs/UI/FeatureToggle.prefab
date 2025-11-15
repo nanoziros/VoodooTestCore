@@ -444,7 +444,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: '<b>FEATURE_NAME: </b> Enabled'
+  m_Text: <b>FEATURE_NAME </b> Enabled
 --- !u!1 &5589498038777832870
 GameObject:
   m_ObjectHideFlags: 0

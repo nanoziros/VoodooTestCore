@@ -33,19 +33,19 @@ namespace Services
             m_RankData = new List<RankData>(Resources.LoadAll<RankData>("Ranks"));
         }
 
-        public int GetPoints()
+        public int GetPoints(GameMode gameMode)
         {
-            return (PlayerPrefs.GetInt(Constants.c_PlayerXPSave, 0));
+            return (PlayerPrefs.GetInt(Constants.GetPlayerXpId(gameMode), 0));
         }
 
-        private void LevelUp()
+        private void LevelUp(GameMode gameMode)
         {
-            PlayerPrefs.SetInt(Constants.c_PlayerLevelSave, GetPlayerLevel() + 1);
+            PlayerPrefs.SetInt(Constants.GetPlayerLevelSaveId(gameMode), GetPlayerLevel(gameMode) + 1);
         }
 
-        private void LevelDown()
+        private void LevelDown(GameMode gameMode)
         {
-            PlayerPrefs.SetInt(Constants.c_PlayerLevelSave, GetPlayerLevel() - 1);
+            PlayerPrefs.SetInt(Constants.GetPlayerLevelSaveId(gameMode), GetPlayerLevel(gameMode) - 1);
         }
 
         public RankData GetRank(int _Level)
@@ -53,9 +53,9 @@ namespace Services
             return (m_RankData[Mathf.Clamp(_Level, 0, m_RankData.Count - 1)]);
         }
 
-        public int GetPlayerLevel()
+        public int GetPlayerLevel(GameMode gameMode)
         {
-            return (PlayerPrefs.GetInt(Constants.c_PlayerLevelSave, 1));
+            return (PlayerPrefs.GetInt(Constants.GetPlayerLevelSaveId(gameMode), 1));
         }
     }
 }

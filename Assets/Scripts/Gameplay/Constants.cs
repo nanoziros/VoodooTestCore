@@ -1,4 +1,6 @@
-﻿namespace Gameplay
+﻿using Services;
+using Utils;
+namespace Gameplay
 {
 	public static class Constants
 	{
@@ -13,11 +15,12 @@
 
 		// Save
 		public const string         c_LevelSave = "Level";
-		public const string			c_GameResultSave = "GameResult";
-		public const string         c_BestScoreSave = "BestScore";
+		private const string	    c_GameResultSave = "GameResult";
+		private const string        c_BestScoreSave = "BestScore";
 		public const string         c_PlayerNameSave = "Nickname";
-		public const string         c_PlayerXPSave = "XP";
-		public const string         c_PlayerLevelSave = "Lvl";
+		private const string        c_PlayerXPSave = "XP";
+		private const string        c_PlayerLevelSave = "Lvl";
+		private const string        c_PlayerLevelBoosterModeSuffix = "_Booster";
 		public const string         c_VibrationSave = "Vibration";
 
 		// Cohorts
@@ -53,5 +56,11 @@
 
 		// IAP
 		public const string			c_NoAdsBundleID = "com.voodoo.drawdotio.noads";
+		
+		// Game mode dependent const strings
+		public static string GetBestScoreId(GameMode gameMode) => $"{c_BestScoreSave}{gameMode.GetSuffix()}";
+		public static string GetGameResultSaveId(GameMode gameMode) => $"{c_GameResultSave}{gameMode.GetSuffix()}";
+		public static string GetPlayerXpId(GameMode gameMode) => $"{c_PlayerXPSave}{gameMode.GetSuffix()}";
+		public static string GetPlayerLevelSaveId(GameMode gameMode) => $"{c_PlayerLevelSave}{gameMode.GetSuffix()}";
 	}
 }

@@ -15,5 +15,7 @@ namespace Configs
         public Transform m_HumanSpotlight;
 
         public List<int> m_XPByRank;
+        public List<LevelPowerUpConfig> m_PowerUpConfigByLevel;
+
     }
 }

@@ -58,13 +58,20 @@ namespace UI
 
         public void OnPlayButton()
         {
-            if (GameService.currentPhase == GamePhase.MAIN_MENU)
-                GameService.ChangePhase(GamePhase.LOADING);
+            GameService.SetGameMode(GameMode.NORMAL);
+            StartGameLoading();
         }
         
         public void OnBoosterModeButton()
         {
-            // todo:
+            GameService.SetGameMode(GameMode.BOOSTER);
+            StartGameLoading();
+        }
+        
+        void StartGameLoading()
+        {
+            if (GameService.currentPhase == GamePhase.MAIN_MENU)
+                GameService.ChangePhase(GamePhase.LOADING);
         }
 
         protected override void OnGamePhaseChanged(GamePhase _GamePhase)

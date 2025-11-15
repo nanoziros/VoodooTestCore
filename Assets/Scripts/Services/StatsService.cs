@@ -4,19 +4,17 @@ using Gameplay;
 using Interfaces.Services;
 using UnityEngine;
 using Zenject;
+using Random = UnityEngine.Random;
 
 namespace Services
 {
 	public class StatsService : IStatsService
 	{
-		public List<int>    m_XPForLevel => m_StatsConfig.m_XPForLevel;
-		public int          m_LastGain { get; set; }
-
 		public int FavoriteSkin
 		{
 			get
 			{
-				return (PlayerPrefs.GetInt("FavoriteSkin", 0));
+				return PlayerPrefs.GetInt("FavoriteSkin", 0);
 			}
 			set
 			{
@@ -25,60 +23,67 @@ namespace Services
 		}
 
 		private StatsConfig m_StatsConfig;
-    
+		private Dictionary<GameMode, int> m_LastGain = new Dictionary<GameMode, int>();
+
 		[Inject]
 		public void Construct(StatsConfig statsConfig)
 		{
 			m_StatsConfig = statsConfig;
 		}
 
-		private int GetGameResult(int _Index)
+		public int GetLastGain(GameMode gameMode)
 		{
-			string key = Constants.c_GameResultSave + "_" + _Index.ToString ();
+			return m_LastGain.GetValueOrDefault(gameMode, 0);
+		}
+
+		private int GetGameResult(GameMode gameMode, int _Index)
+		{
+			string key = Constants.GetGameResultSaveId(gameMode) + "_" + _Index;
 
 			if (PlayerPrefs.HasKey(key))
 				return PlayerPrefs.GetInt(key);
-			else
-				return 0;
+			return 0;
 		}
 
-		public void AddGameResult(int _WinScore)
+		public void AddGameResult(GameMode gameMode, int _WinScore)
 		{
 			// Move results
+			string gameResultGameId = Constants.GetGameResultSaveId(gameMode);
 			for (int i = Constants.c_SavedGameCount - 1; i >= 0; --i)
 			{
-				string key = Constants.c_GameResultSave + "_" + i.ToString ();
-				PlayerPrefs.SetInt (key, GetGameResult (i - 1));
+				string key = gameResultGameId + "_" + i.ToString ();
+				PlayerPrefs.SetInt (key, GetGameResult (gameMode,i - 1));
 			}
 
 			// Set new result
-			PlayerPrefs.SetInt (Constants.c_GameResultSave + "_0", _WinScore);
+			PlayerPrefs.SetInt (Constants.GetGameResultSaveId(gameMode) + "_0", _WinScore);
 		}
 
-		public float GetLevel()
+		public float GetLevel(GameMode gameMode)
 		{
 			int result = 0;
 
 			for (int i = 0; i < Constants.c_SavedGameCount; ++i)
-				result += GetGameResult (i);
+				result += GetGameResult (gameMode, i);
             
-			float percent = ((float)result) / ((float)Constants.c_SavedGameCount);
+			float percent = ((float)result) / Constants.c_SavedGameCount;
 			return Mathf.Clamp01(percent);
 		}
 
-		public void TryToSetBestScore(int _Score)
+		public void TryToSetBestScore(GameMode gameMode, int _Score)
 		{
-			int score = GetBestScore ();
+			int score = GetBestScore (gameMode);
 			if (score < _Score)
 			{
-				PlayerPrefs.SetInt(Constants.c_BestScoreSave, _Score);
+				PlayerPrefs.SetInt(Constants.GetBestScoreId(gameMode), _Score);
 			}
 		}
 
-		public int GetBestScore()
+		private int GetBestScore(GameMode gameMode)
 		{
-			if (PlayerPrefs.HasKey(Constants.c_BestScoreSave))
-				return PlayerPrefs.GetInt(Constants.c_BestScoreSave);
+			string bestScoreId = Constants.GetBestScoreId(gameMode);
+			if (PlayerPrefs.HasKey(bestScoreId))
+				return PlayerPrefs.GetInt(bestScoreId);
 			else
 				return 0;
 		}
@@ -93,55 +98,69 @@ namespace Services
 			return (PlayerPrefs.GetString(Constants.c_PlayerNameSave, null));
 		}
 
-		public void SetLastXP(int _XP)
+		public void SetLastXP(GameMode gameMode, int _XP)
 		{
-			m_LastGain = _XP;
+			m_LastGain[gameMode] = _XP;
 		}
 
-		public void GainXP()
+		public void GainXP(GameMode gameMode)
 		{
-        
-			int _XP  = m_LastGain;
-
-
-			int xp = _XP + GetXP();
-
-			while (xp >= XPToNextLevel())
+			int _XP  = 0;
+			if (m_LastGain.TryGetValue(gameMode, out var value))
 			{
-				xp -= XPToNextLevel();
-				LevelUp();
+				_XP = value;
 			}
-			PlayerPrefs.SetInt(Constants.c_PlayerXPSave, xp);
 
+			int xp = _XP + GetXP(gameMode);
+
+			while (xp >= XPToNextLevel(gameMode))
+			{
+				xp -= XPToNextLevel(gameMode);
+				LevelUp(gameMode);
+			}
+			
+			PlayerPrefs.SetInt(Constants.GetPlayerXpId(gameMode), xp);
 		}
     
-		public int GetXP()
+		public int GetXP(GameMode gameMode)
 		{
-			return (PlayerPrefs.GetInt(Constants.c_PlayerXPSave, 0));
+			return PlayerPrefs.GetInt(Constants.GetPlayerXpId(gameMode), 0);
 		}
 
-		public int GetPlayerLevel()
+		public int GetPlayerLevel(GameMode gameMode)
 		{
-			return (PlayerPrefs.GetInt(Constants.c_PlayerLevelSave, 1));
+			return PlayerPrefs.GetInt(Constants.GetPlayerLevelSaveId(gameMode), 1);
 		}
 
-		void LevelUp()
+		void LevelUp(GameMode gameMode)
 		{
-			PlayerPrefs.SetInt(Constants.c_PlayerLevelSave, GetPlayerLevel() + 1);
+			PlayerPrefs.SetInt(Constants.GetPlayerLevelSaveId(gameMode), GetPlayerLevel(gameMode) + 1);
+		}
+		
+		void LevelDown(GameMode gameMode)
+		{
+			PlayerPrefs.SetInt(Constants.GetPlayerLevelSaveId(gameMode), GetPlayerLevel(gameMode) - 1);
 		}
 
-		void LevelDown()
+		public int XPToNextLevel(GameMode gameMode, int _LevelStart = -1)
 		{
-			PlayerPrefs.SetInt(Constants.c_PlayerLevelSave, GetPlayerLevel() - 1);
+			int currentLevel = _LevelStart == -1 ? GetPlayerLevel(gameMode) - 1 : _LevelStart;
+			var xpProgression = GetXPForLevelProgression(gameMode);
+			int index = Mathf.Min(currentLevel, xpProgression.Count - 1);
+			return xpProgression[index];
 		}
 
-		public int XPToNextLevel(int _LevelStart = -1)
+		private List<int> GetXPForLevelProgression(GameMode gameMode)
 		{
-			int currentLevel = _LevelStart == -1 ? GetPlayerLevel() - 1 : _LevelStart;
-			int index = Mathf.Min(currentLevel, m_XPForLevel.Count - 1);
-			return (m_XPForLevel[index]);
+			switch (gameMode)
+			{
+				case GameMode.BOOSTER:
+					return m_StatsConfig.m_XPForBoosterLevel;
+				default:
+					return m_StatsConfig.m_XPForLevel;
+			}
 		}
-
+		
 		#region IAs
 
 		// Behaviour probas
@@ -161,19 +180,19 @@ namespace Services
 		public AnimationCurve		m_RandomProbaCurve;
 		public AnimationCurve		m_RandomDurationCurve;
 
-		public float GetRandomProba()
+		public float GetRandomProba(GameMode gameMode)
 		{
-			return GetRandomValue (c_MaxRandomProbaLevel, c_FirstMinRandomProba, c_FirstMaxRandomProba, c_SecondMinRandomProba, c_SecondMaxRandomProba, m_RandomProbaCurve);
+			return GetRandomValue (gameMode, c_MaxRandomProbaLevel, c_FirstMinRandomProba, c_FirstMaxRandomProba, c_SecondMinRandomProba, c_SecondMaxRandomProba, m_RandomProbaCurve);
 		}
 
-		public float GetRandomDuration()
+		public float GetRandomDuration(GameMode gameMode)
 		{
-			return GetRandomValue (c_MaxRandomDurationLevel, c_FirstMinRandomDuration, c_FirstMaxRandomDuration, c_SecondMinRandomDuration, c_SecondMaxRandomDuration, m_RandomDurationCurve);
+			return GetRandomValue (gameMode, c_MaxRandomDurationLevel, c_FirstMinRandomDuration, c_FirstMaxRandomDuration, c_SecondMinRandomDuration, c_SecondMaxRandomDuration, m_RandomDurationCurve);
 		}
 
-		private float GetRandomValue(int _MaxLevel, float _FirstMin, float _FirstMax, float _SecondMin, float _SecondMax, AnimationCurve _Curve)
+		private float GetRandomValue(GameMode gameMode, int _MaxLevel, float _FirstMin, float _FirstMax, float _SecondMin, float _SecondMax, AnimationCurve _Curve)
 		{
-			float level = GetLevel();
+			float level = GetLevel(gameMode);
 			float percent = _Curve.Evaluate(level / ((float)_MaxLevel));
 			float minValue = Mathf.Lerp(_FirstMin, _SecondMin, _Curve.Evaluate(percent));
 			float maxValue = Mathf.Lerp(_FirstMax, _SecondMax, _Curve.Evaluate(percent));
