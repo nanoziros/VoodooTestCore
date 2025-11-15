@@ -97,7 +97,16 @@ namespace GameEditor.Configs
         private void DrawPowerUpToggles(GameConfig config, LevelPowerUpConfig levelConfig)
         {
             EditorGUI.indentLevel++;
-
+            
+            bool brushEnabled = levelConfig.m_BrushPowerUpEnabled;
+            bool newBrushEnabled = EditorGUILayout.ToggleLeft("Brush Power Up", brushEnabled);
+            if (newBrushEnabled != brushEnabled)
+            {
+                Undo.RecordObject(config, "Toggle Brush PowerUp");
+                levelConfig.m_BrushPowerUpEnabled = newBrushEnabled;
+                EditorUtility.SetDirty(config);
+            }
+            
             List<PowerUpData> enabled = levelConfig.m_EnabledPowerUps;
 
             for (int i = 0; i < m_allPowerUps.Length; i++)
@@ -127,6 +136,7 @@ namespace GameEditor.Configs
 
             LevelPowerUpConfig newLevel = new LevelPowerUpConfig
             {
+                m_BrushPowerUpEnabled = true,
                 m_EnabledPowerUps = new List<PowerUpData>(m_allPowerUps)
             };
 

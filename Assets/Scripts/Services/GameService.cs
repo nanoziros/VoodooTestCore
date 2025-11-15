@@ -96,6 +96,7 @@ namespace Services
         private List<Color> m_Colors;
         private List<Vector3> m_PopPoints;
         private List<PowerUpData> m_PowerUps;
+        private bool m_BrushPowerUpEnabled;
         private List<PowerUpData> m_ActivePowerUps;
         private PlayerNameData m_PlayerNameData;
         private List<GameObject> m_Objects; // Powerups and other map objects
@@ -233,7 +234,11 @@ namespace Services
                 case GamePhase.LOADING:
                     m_LastBrushTime = Time.time;
                     m_LastPowerUpTime = Time.time;
-                    m_ActivePowerUps = GetPossiblePowerUps(currentGameMode);
+                    
+                    LevelPowerUpConfig currentLevelPowerUpConfig = GetCurrentLevelPowerUpConfig(currentGameMode);
+                    m_ActivePowerUps = currentLevelPowerUpConfig.m_EnabledPowerUps;
+                    m_BrushPowerUpEnabled = currentLevelPowerUpConfig.m_BrushPowerUpEnabled;
+                    
                     m_PowerUpRate = Random.Range(c_MinPowerUpRate, c_MaxPowerUpRate);
                     m_Level = m_StatsService.GetLevel(currentGameMode);
                     PopPlayers();
@@ -274,9 +279,9 @@ namespace Services
             if (onGamePhaseChanged != null)
                 onGamePhaseChanged.Invoke(_GamePhase);
         }
-        private List<PowerUpData> GetPossiblePowerUps(GameMode gameMode)
+        private LevelPowerUpConfig GetCurrentLevelPowerUpConfig(GameMode gameMode)
         {
-            List<PowerUpData> powerUps = new List<PowerUpData>();
+            LevelPowerUpConfig levelPowerUpConfig = new LevelPowerUpConfig();
             switch (gameMode)
             {
                 case GameMode.BOOSTER:
@@ -284,18 +289,16 @@ namespace Services
                     List<LevelPowerUpConfig> powerUpConfigs = m_GameConfig.m_BoosterModePowerUpConfigByLevel;
                     if (powerUpConfigs.Count > 0)
                     {
-                        LevelPowerUpConfig currentLevelConfig = powerUpConfigs[Mathf.Min(playerLevel, powerUpConfigs.Count - 1)];
-                        powerUps = currentLevelConfig.m_EnabledPowerUps;
+                        levelPowerUpConfig = powerUpConfigs[Mathf.Min(playerLevel, powerUpConfigs.Count - 1)];
                     }
                     break;
                 default:
-                    foreach (PowerUpData powerUpData in m_PowerUps.Where(powerUpData => !powerUpData.isBoosterModeExclusive))
-                    {
-                        m_ActivePowerUps.Add(powerUpData);
-                    }
+                    List<PowerUpData> powerUpDatas = m_PowerUps.Where(powerUpData => !powerUpData.isBoosterModeExclusive).ToList();
+                    levelPowerUpConfig.m_BrushPowerUpEnabled = true;
+                    levelPowerUpConfig.m_EnabledPowerUps = powerUpDatas;
                     break;
             }
-            return powerUps;
+            return levelPowerUpConfig;
         }
 
         public void AddMapObject(GameObject _Object)
@@ -415,7 +418,8 @@ namespace Services
 
             m_ProgressionView.UpdateView();
 
-            if (Time.time - m_LastPowerUpTime > m_PowerUpRate)
+            bool powerUpsAvailable = m_ActivePowerUps.Count > 0;
+            if (powerUpsAvailable && Time.time - m_LastPowerUpTime > m_PowerUpRate)
             {
                 m_PowerUpRate = Random.Range(c_MinPowerUpRate, c_MaxPowerUpRate);
                 m_LastPowerUpTime = Time.time;
@@ -424,7 +428,7 @@ namespace Services
                 PopObjectRandomly(powerUpData.m_Prefab);
             }
 
-            if (Time.time - m_LastBrushTime > c_BrushRate)
+            if (m_BrushPowerUpEnabled && Time.time - m_LastBrushTime > c_BrushRate)
             {
                 m_LastBrushTime = Time.time;
                 PopObjectRandomly(m_BrushPowerUpPrefab.gameObject);
@@ -460,7 +464,7 @@ namespace Services
 
         public GameObject PickPowerUp()
         {
-            return m_PowerUps[Random.Range(0, m_PowerUps.Count)].m_Prefab;
+            return m_ActivePowerUps[Random.Range(0, m_ActivePowerUps.Count)].m_Prefab;
         }
         
         public Player GetBestPlayer()
