@@ -280,7 +280,13 @@ namespace Services
             switch (gameMode)
             {
                 case GameMode.BOOSTER:
-                    // todo: implement booster mode
+                    int playerLevel = m_StatsService.GetPlayerLevel(gameMode); 
+                    List<LevelPowerUpConfig> powerUpConfigs = m_GameConfig.m_PowerUpConfigByLevel;
+                    if (powerUpConfigs.Count > 0)
+                    {
+                        LevelPowerUpConfig currentLevelConfig = powerUpConfigs[Mathf.Min(playerLevel, powerUpConfigs.Count - 1)];
+                        powerUps = currentLevelConfig.m_EnabledPowerUps;
+                    }
                     break;
                 default:
                     foreach (PowerUpData powerUpData in m_PowerUps.Where(powerUpData => !powerUpData.isBoosterModeExclusive))

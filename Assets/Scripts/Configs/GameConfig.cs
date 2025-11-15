@@ -16,6 +16,5 @@ namespace Configs
 
         public List<int> m_XPByRank;
         public List<LevelPowerUpConfig> m_PowerUpConfigByLevel;
-
     }
 }
