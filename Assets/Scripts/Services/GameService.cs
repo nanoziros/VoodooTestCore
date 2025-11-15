@@ -281,7 +281,7 @@ namespace Services
             {
                 case GameMode.BOOSTER:
                     int playerLevel = m_StatsService.GetPlayerLevel(gameMode); 
-                    List<LevelPowerUpConfig> powerUpConfigs = m_GameConfig.m_PowerUpConfigByLevel;
+                    List<LevelPowerUpConfig> powerUpConfigs = m_GameConfig.m_BoosterModePowerUpConfigByLevel;
                     if (powerUpConfigs.Count > 0)
                     {
                         LevelPowerUpConfig currentLevelConfig = powerUpConfigs[Mathf.Min(playerLevel, powerUpConfigs.Count - 1)];
