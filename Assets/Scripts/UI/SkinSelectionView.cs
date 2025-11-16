@@ -109,7 +109,12 @@ namespace UI
                 ApplySkinVisuals(skinOptionButton.m_RawImageContent, skinData);
 
                 int currentIndex = index;
-                skinOptionButton.m_Button.onClick.AddListener(() => SelectSkin(currentIndex));
+                skinOptionButton.m_Button.onClick.AddListener(() =>
+                    {
+                        SelectSkin(currentIndex);
+                        GameService.SetColor(GameService.ComputeCurrentPlayerColor(true, 0));
+                    }
+                   );
             }
         }
 

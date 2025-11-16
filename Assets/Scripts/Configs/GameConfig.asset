@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c725805b8e491445f90a3cfb8bab90dc, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: 
-  m_DebugLevel: 1
+  m_DebugLevel: 0
   m_BrushPowerUpPrefab: {fileID: 114406100664639548, guid: 24a5c1e7971a14d4a9980eee0e182a0f,
     type: 3}
   m_HumanPlayer: {fileID: 1193150808822244, guid: 51f1d08532bfb0f4ebaffc93c89032a7,
@@ -24,18 +24,27 @@ MonoBehaviour:
   m_BoosterModePowerUpConfigByLevel:
   - m_BrushPowerUpEnabled: 0
     m_EnabledPowerUps: []
-  - m_BrushPowerUpEnabled: 1
-    m_EnabledPowerUps: []
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: d09297e07a7f135418060827bc78f84f, type: 2}
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: f64d251d7d7192b4a999a9de4848c08d, type: 2}
+    - {fileID: 11400000, guid: d09297e07a7f135418060827bc78f84f, type: 2}
+  - m_BrushPowerUpEnabled: 0
+    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: f64d251d7d7192b4a999a9de4848c08d, type: 2}
+    - {fileID: 11400000, guid: 707909f05d8274438a62b7a0fec4fa9b, type: 2}
+    - {fileID: 11400000, guid: d09297e07a7f135418060827bc78f84f, type: 2}
   - m_BrushPowerUpEnabled: 0
     m_EnabledPowerUps:
     - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
-  - m_BrushPowerUpEnabled: 0
-    m_EnabledPowerUps:
+    - {fileID: 11400000, guid: f64d251d7d7192b4a999a9de4848c08d, type: 2}
     - {fileID: 11400000, guid: 707909f05d8274438a62b7a0fec4fa9b, type: 2}
+    - {fileID: 11400000, guid: d09297e07a7f135418060827bc78f84f, type: 2}
   - m_BrushPowerUpEnabled: 1
     m_EnabledPowerUps:
     - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
-  - m_BrushPowerUpEnabled: 1
-    m_EnabledPowerUps:
-    - {fileID: 11400000, guid: d0b76c6fa360548088faf3b80e72a6d7, type: 2}
+    - {fileID: 11400000, guid: f64d251d7d7192b4a999a9de4848c08d, type: 2}
     - {fileID: 11400000, guid: 707909f05d8274438a62b7a0fec4fa9b, type: 2}
+    - {fileID: 11400000, guid: d09297e07a7f135418060827bc78f84f, type: 2}

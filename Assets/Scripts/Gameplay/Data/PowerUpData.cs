@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using Services;
+using UnityEngine;
 
 namespace Gameplay.Data
 {
@@ -6,6 +8,6 @@ namespace Gameplay.Data
 	public class PowerUpData : ScriptableObject
 	{
 		public GameObject 	m_Prefab;
-		public bool isBoosterModeExclusive = false;
+		public List<GameMode> m_ExclusiveToGameMode = new List<GameMode>();
 	}
 }

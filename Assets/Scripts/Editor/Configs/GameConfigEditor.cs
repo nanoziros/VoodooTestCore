@@ -10,11 +10,11 @@ namespace GameEditor.Configs
     [CustomEditor(typeof(GameConfig))]
     public class GameConfigEditor : Editor
     {
-        private PowerUpData[] m_allPowerUps;
+        private PowerUpData[] m_AllPowerUps;
 
         private void OnEnable()
         {
-            m_allPowerUps = Resources.LoadAll<PowerUpData>("PowerUps");
+            m_AllPowerUps = Resources.LoadAll<PowerUpData>("PowerUps");
         }
 
         public override void OnInspectorGUI()
@@ -37,7 +37,7 @@ namespace GameEditor.Configs
 
             EditorGUILayout.LabelField("BoosterMode PowerUps Per Level", EditorStyles.boldLabel);
 
-            if (m_allPowerUps.Length == 0)
+            if (m_AllPowerUps.Length == 0)
             {
                 EditorGUILayout.HelpBox(
                     "No PowerUpData assets found in Resources/PowerUps.",
@@ -55,6 +55,7 @@ namespace GameEditor.Configs
 
             if (levels.Count > 0 && GUILayout.Button("Clear All Levels"))
                 ClearLevels(config, levels);
+            
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space();
@@ -109,9 +110,9 @@ namespace GameEditor.Configs
             
             List<PowerUpData> enabled = levelConfig.m_EnabledPowerUps;
 
-            for (int i = 0; i < m_allPowerUps.Length; i++)
+            for (int i = 0; i < m_AllPowerUps.Length; i++)
             {
-                PowerUpData powerUp = m_allPowerUps[i];
+                PowerUpData powerUp = m_AllPowerUps[i];
                 bool isEnabled = enabled.Contains(powerUp);
                 bool newEnabled = EditorGUILayout.ToggleLeft(powerUp.name, isEnabled);
 
@@ -137,7 +138,7 @@ namespace GameEditor.Configs
             LevelPowerUpConfig newLevel = new LevelPowerUpConfig
             {
                 m_BrushPowerUpEnabled = true,
-                m_EnabledPowerUps = new List<PowerUpData>(m_allPowerUps)
+                m_EnabledPowerUps = new List<PowerUpData>(m_AllPowerUps)
             };
 
             levels.Add(newLevel);

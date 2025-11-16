@@ -89,7 +89,7 @@ namespace Gameplay.Players
 		public bool                 isEliminated { get { return m_IsEliminated; } }
 		public bool                 isDead { get { return m_IsDead; } }
 		protected float 			m_SizeFactor = 1.0f;
-
+		protected float				m_SpeedFactor = 1.0f;
 		// Frags
 		protected int				m_FragCount = 0;
 		private Player 				m_FragOrg;
@@ -477,7 +477,7 @@ namespace Gameplay.Players
 
 		protected float GetSpeed()
 		{
-			return Mathf.Clamp(m_Speed, c_MinSpeed, c_MaxSpeed);
+			return Mathf.Clamp(m_Speed * m_SpeedFactor, c_MinSpeed, c_MaxSpeed);
 		}
 
 		public float GetSize()
@@ -503,6 +503,9 @@ namespace Gameplay.Players
 				case EBonus.SIZE_UP:
 					m_SizeFactor = 1.0f;
 					break;
+				case EBonus.SPEED_UP:
+					m_SpeedFactor = 1.0f;
+					break;
 			}
 		}
 
@@ -513,6 +516,16 @@ namespace Gameplay.Players
 				StopCoroutine(m_SizePowerUpCoroutine);
 			m_SizePowerUpCoroutine = StartCoroutine (BonusCoroutine(EBonus.SIZE_UP, _Duration));
 		}
+		
+		
+		public virtual void AddSpeedUp(float _Factor, float _Duration)
+		{
+			m_SpeedFactor = _Factor;
+			if (m_SpeedPowerUpCoroutine != null)
+				StopCoroutine(m_SpeedPowerUpCoroutine);
+			m_SpeedPowerUpCoroutine = StartCoroutine (BonusCoroutine(EBonus.SPEED_UP, _Duration));
+		}
+
 
 		#endregion   
 

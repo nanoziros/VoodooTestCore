@@ -29,5 +29,6 @@ namespace Interfaces.Services
         void TryRevive();
         Player GetBestPlayer();
         void SetGameMode(GameMode gameMode);
+        Vector3 CalculateRandomSpawnPosition();
     }
 }

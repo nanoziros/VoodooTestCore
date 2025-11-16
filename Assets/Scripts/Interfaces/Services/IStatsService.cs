@@ -7,7 +7,7 @@ namespace Interfaces.Services
         public float GetLevel(GameMode gameMode);
         void TryToSetBestScore(GameMode gameMode, int playerScore);
         void AddGameResult(GameMode gameMode, int rankingScore);
-        void SetLastXP(GameMode gameMode, int xp);
+        void SetLastXP(GameMode _GameMode, int xp);
         void GainXP(GameMode gameMode);
         int FavoriteSkin { get; set; }
         int GetLastGain (GameMode gameMode);

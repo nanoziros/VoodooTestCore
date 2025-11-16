@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Castle.Core.Internal;
 using Configs;
 using Gameplay;
 using Gameplay.Data;
@@ -293,11 +294,14 @@ namespace Services
                     }
                     break;
                 default:
-                    List<PowerUpData> powerUpDatas = m_PowerUps.Where(powerUpData => !powerUpData.isBoosterModeExclusive).ToList();
+                    List<PowerUpData> powerUpDatas = m_PowerUps;
                     levelPowerUpConfig.m_BrushPowerUpEnabled = true;
                     levelPowerUpConfig.m_EnabledPowerUps = powerUpDatas;
                     break;
             }
+            levelPowerUpConfig.m_EnabledPowerUps = levelPowerUpConfig.m_EnabledPowerUps
+                .Where(x => x.m_ExclusiveToGameMode.IsNullOrEmpty() || x.m_ExclusiveToGameMode.Contains(gameMode))
+                .ToList();
             return levelPowerUpConfig;
         }
 
@@ -439,17 +443,24 @@ namespace Services
 
         public void PopObjectRandomly(GameObject _Prefab)
         {
-            m_PosBuffer.Set(Random.Range(-m_TerrainService.WorldHalfWidth + c_PowerUpPadding, m_TerrainService.WorldHalfWidth - c_PowerUpPadding),
-                0.0f,
-                Random.Range(-m_TerrainService.WorldHalfHeight + c_PowerUpPadding, m_TerrainService.WorldHalfHeight - c_PowerUpPadding));
-
-            if (Mathf.Abs(m_PosBuffer.x) < c_PowerUpPadding)
-                m_PosBuffer.x += c_PowerUpPadding * Mathf.Sign(m_PosBuffer.x);
-            if (Mathf.Abs(m_PosBuffer.z) < c_PowerUpPadding)
-                m_PosBuffer.z += c_PowerUpPadding * Mathf.Sign(m_PosBuffer.z);
+            m_PosBuffer = CalculateRandomSpawnPosition();
 
             m_TerrainService.ClampPosition(ref m_PosBuffer, Constants.c_SpawnBorderOffset);
             m_Objects.Add(m_Container.InstantiatePrefab(_Prefab, m_PosBuffer, Quaternion.identity, null));
+        }
+        
+        public Vector3 CalculateRandomSpawnPosition()
+        {
+            Vector3 posBuffer = new Vector3();
+            posBuffer.Set(Random.Range(-m_TerrainService.WorldHalfWidth + c_PowerUpPadding, m_TerrainService.WorldHalfWidth - c_PowerUpPadding),
+                0.0f,
+                Random.Range(-m_TerrainService.WorldHalfHeight + c_PowerUpPadding, m_TerrainService.WorldHalfHeight - c_PowerUpPadding));
+
+            if (Mathf.Abs(posBuffer.x) < c_PowerUpPadding)
+                posBuffer.x += c_PowerUpPadding * Mathf.Sign(posBuffer.x);
+            if (Mathf.Abs(posBuffer.z) < c_PowerUpPadding)
+                posBuffer.z += c_PowerUpPadding * Mathf.Sign(posBuffer.z);
+            return posBuffer;
         }
 
         public int PickBrushID()

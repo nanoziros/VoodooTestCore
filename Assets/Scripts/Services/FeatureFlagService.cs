@@ -7,8 +7,10 @@ namespace Services
     public class FeatureFlagService : IFeatureFlagService
     {
         private FeatureFlagsConfig m_FeatureFlagsConfig;
+        
         private bool m_SkinSelectionScreenEnabled;
         private bool m_BoosterGameModeEnabled;
+        
         public bool BoosterGameModeEnabled
         {
             get
